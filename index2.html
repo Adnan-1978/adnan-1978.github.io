@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ستوديو البرومبت</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f1f4f8;--sf:#fff;--tx:#10202f;--mu:#566678;--ac:#a86406;--acb:#f2b544;--acx:#2a1a00;--ln:#d5dde7;--tl:#0f7f78;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){color-scheme:dark;--bg:#0b1624;--sf:#122338;--tx:#eaf1f7;--mu:#93a6ba;--ac:#f2b544;--acb:#f2b544;--acx:#2a1a00;--ln:#243b55;--tl:#5cc8c0}}
+:root[data-theme="dark"]{color-scheme:dark;--bg:#0b1624;--sf:#122338;--tx:#eaf1f7;--mu:#93a6ba;--ac:#f2b544;--acb:#f2b544;--acx:#2a1a00;--ln:#243b55;--tl:#5cc8c0}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 16px/1.7 Cairo,Tahoma,system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:28px;font-weight:800;margin:8px 0 4px;line-height:1.3}
+h2{font-size:19px;font-weight:800;margin:0 0 12px}
+.sub{color:var(--mu);margin:0 0 24px;max-width:46ch}
+section{margin-bottom:36px}
+.slate{background:var(--sf);border:1px solid var(--ln);border-top:4px solid var(--acb);border-radius:6px;padding:16px}
+label.f{display:block;font-weight:600;margin-bottom:6px}
+input[type=text]{width:100%;font:inherit;color:var(--tx);background:var(--bg);border:1px solid var(--ln);border-radius:6px;padding:10px 12px}
+input[type=text]:focus,button:focus-visible,a:focus-visible{outline:2px solid var(--tl);outline-offset:2px}
+.grp{margin-top:16px}.grp b{display:block;font-weight:600;color:var(--mu);font-size:14px;margin-bottom:6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{font:inherit;font-size:14px;color:var(--tx);background:transparent;border:1px solid var(--ln);border-radius:999px;padding:4px 14px;cursor:pointer}
+.chip[aria-pressed=true]{background:var(--acb);border-color:var(--acb);color:var(--acx);font-weight:600}
+.out{direction:ltr;text-align:left;margin-top:18px;background:var(--bg);border:1px dashed var(--ln);border-radius:6px;padding:12px 14px;min-height:72px;font:400 15px/1.6 ui-monospace,Menlo,Consolas,monospace;word-break:break-word}
+.out.empty{color:var(--mu);direction:rtl;text-align:right;font-family:inherit}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;align-items:center}
+.btn{font:inherit;font-weight:600;border-radius:6px;padding:8px 16px;cursor:pointer;border:1px solid var(--ln);background:var(--sf);color:var(--tx);text-decoration:none;font-size:15px}
+.btn.p{background:var(--acb);border-color:var(--acb);color:var(--acx)}
+.hint{color:var(--mu);font-size:14px;margin:0}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:6px;padding:14px;margin-bottom:12px}
+.card h3{margin:0 0 6px;font-size:16px;font-weight:600}
+.card p{direction:ltr;text-align:left;margin:0 0 10px;font-size:14px;color:var(--mu);line-height:1.6}
+.card .row{margin-top:0}
+.fav[aria-pressed=true]{border-color:var(--acb);color:var(--ac)}
+.toast{position:fixed;inset-inline:0;bottom:calc(20px + env(safe-area-inset-bottom,0px));margin:auto;width:max-content;max-width:90%;background:var(--tx);color:var(--bg);padding:8px 18px;border-radius:6px;font-weight:600;opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.on{opacity:1}
+footer{color:var(--mu);font-size:14px;border-top:1px solid var(--ln);padding-top:14px}
+@media (prefers-reduced-motion:reduce){.toast{transition:none}}
+</style>
+</head>
+<body>
+<main>
+<h1>ستوديو البرومبت</h1>
+<p class="sub">ابنِ أمر توليد الصور خطوة بخطوة، أو اختر قالبًا جاهزًا وعدّل عليه.</p>
+
+<section aria-labelledby="bh">
+<h2 id="bh">منشئ البرومبت</h2>
+<div class="slate">
+<label class="f" for="subj">وصف الصورة (بأي لغة)</label>
+<input type="text" id="subj" placeholder="مثال: شاب يقف أمام سيارة كلاسيكية">
+<div id="groups"></div>
+<div class="out empty" id="out" aria-live="polite">اكتب وصف الصورة واختر عناصر لتظهر الصيغة النهائية هنا.</div>
+<div class="row">
+<button class="btn p" id="copy">نسخ البرومبت</button>
+<button class="btn" id="clear">مسح</button>
+</div>
+<div class="row">
+<p class="hint">بعد النسخ افتح الأداة والصق:</p>
+<a class="btn" href="https://gemini.google.com" target="_blank" rel="noopener">Gemini</a>
+<a class="btn" href="https://chatgpt.com" target="_blank" rel="noopener">ChatGPT</a>
+<a class="btn" href="https://leonardo.ai" target="_blank" rel="noopener">Leonardo</a>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="ih">
+<h2 id="ih">أدوات إنشاء الصور</h2>
+<div class="card">
+<p style="direction:rtl;text-align:right">ينسخ الموقع برومبت المنشئ تلقائيًا قبل فتح الأداة. كلمة «غير محدود» مكتوبة في وصف الأداة بالدليل، فتأكد من شروطها قبل الاعتماد عليها.</p>
+<div class="row">
+<a class="btn vl" href="https://theresanaiforthat.com/@taaft/image-generator" target="_blank" rel="noopener">مولد الصور (TAAFT)</a>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="vh">
+<h2 id="vh">أدوات الفيديو</h2>
+<div class="card">
+<p style="direction:rtl;text-align:right">اكتب وصف المشهد في المنشئ بالأعلى. عند الضغط على أي أداة ينسخ الموقع البرومبت تلقائيًا ثم يفتح الأداة. الحدود المجانية وشروط الاستخدام التجاري تختلف من أداة لأخرى، فراجعها قبل الاعتماد عليها.</p>
+<div class="row">
+<a class="btn vl" href="https://theresanaiforthat.com/@taaft/video-generator" target="_blank" rel="noopener">مولد الفيديو (TAAFT)</a>
+<a class="btn vl" href="https://magichour.ai" target="_blank" rel="noopener">Magic Hour</a>
+<a class="btn vl" href="https://lumalabs.ai/create/free-ai-video-generator" target="_blank" rel="noopener">Luma</a>
+</div>
+</div>
+</section>
+
+<section aria-labelledby="lh">
+<h2 id="lh">قوالب جاهزة</h2>
+<div class="chips" id="cats" style="margin-bottom:14px"></div>
+<div id="lib"></div>
+</section>
+
+<footer>إنشاء الصور داخل الصفحة نفسها يحتاج سيرفرًا ومفتاح API، وهي الخطوة التالية بعد تجربة هذه النسخة.</footer>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var G=[
+{k:'style',t:'الأسلوب',o:[['واقعي','photorealistic'],['سينمائي','cinematic film still'],['أنمي','anime style'],['ثلاثي الأبعاد','3D render'],['رسم رقمي','digital illustration'],['فنتازيا','fantasy art']]},
+{k:'light',t:'الإضاءة',o:[['ضوء الغروب','golden hour lighting'],['إضاءة استوديو','soft studio lighting'],['نيون ليلي','neon night lighting'],['ضباب درامي','dramatic moody fog'],['ضوء طبيعي','natural daylight']]},
+{k:'cam',t:'الكاميرا',o:[['لقطة قريبة','close-up shot'],['لقطة متوسطة','medium shot'],['من الأعلى','top-down view'],['زاوية منخفضة','low angle shot'],['عدسة واسعة','wide angle lens, 24mm']]},
+{k:'mood',t:'الألوان والمزاج',o:[['دافئ','warm tones'],['بارد','cool teal and blue palette'],['ألوان زاهية','vibrant saturated colors'],['هادئ','calm minimal palette'],['قديم','vintage retro film grain']]},
+{k:'q',t:'الجودة',o:[['تفاصيل عالية','highly detailed, sharp focus'],['8K','8k resolution'],['تركيب احترافي','professional composition']]},
+{k:'ratio',t:'نسبة الأبعاد',o:[['عريضة 16:9','16:9 aspect ratio, wide landscape'],['عمودية 9:16','9:16 aspect ratio, vertical'],['مربعة 1:1','1:1 square aspect ratio']]},
+{k:'extra',t:'خيارات إضافية',o:[['بدون نصوص أو علامات مائية','no text, no watermark']]}
+];
+var T=[
+['بورتريه','بورتريه استوديو','Portrait of [person], wearing [outfit], soft studio lighting, 85mm lens, shallow depth of field, photorealistic, highly detailed skin texture'],
+['بورتريه','بورتريه ضوء الغروب','Close-up portrait of [person] outdoors at golden hour, warm rim light, blurred background, natural expression, photorealistic'],
+['سينمائي','شارع ممطر ليلًا','A man in a black suit walking down a rainy city street at night, neon reflections on wet asphalt, cinematic film still, anamorphic lens, moody atmosphere'],
+['سينمائي','لقطة سيارة كلاسيكية','Classic [car model] parked on an empty desert road at dusk, dramatic sky, cinematic wide shot, film grain, teal and orange grading'],
+['منتجات','منتج على خلفية بسيطة','Product photo of [product] centered on a seamless [color] background, soft diffused studio light, subtle shadow, commercial photography, sharp focus'],
+['منتجات','منتج مع عناصر طبيعية','[product] on a stone surface surrounded by [leaves/flowers], morning window light, minimal styling, editorial product shot'],
+['أنمي','شخصية أنمي','Anime character, [hair color] hair, [outfit], standing on a rooftop at sunset, detailed linework, vibrant colors, soft cel shading'],
+['أنمي','مشهد مدرسة أنمي','Anime scene of a classroom after school, warm light through windows, floating dust, gentle atmosphere, detailed background art'],
+['خيال','مدينة مستقبلية','Futuristic city skyline with flying vehicles, glowing signs, layered fog, concept art, ultra detailed, epic scale'],
+['خيال','قلعة في الغيوم','A castle on a floating island above the clouds, golden sunlight, waterfalls falling into the sky, fantasy matte painting'],
+['معمار','غرفة معيشة حديثة','Modern living room interior, natural wood and linen textures, large windows, soft daylight, architectural photography, wide angle'],
+['معمار','واجهة مبنى','Contemporary building facade with geometric patterns, blue hour, long exposure light trails, architectural photography'],
+['خيال','غابة مضيئة','Enchanted forest at twilight, glowing mushrooms and floating lights, mist between ancient trees, magical atmosphere, fantasy concept art, highly detailed'],
+['خيال','تنين فوق الجبال','A massive dragon flying over snow mountains at sunrise, wings spread, volumetric clouds, epic fantasy illustration, dramatic lighting'],
+['خيال','سوق عربي سحري','Magical Arabian night market with hanging lanterns, glowing lamps, spice stalls and drifting smoke, warm golden light, fantasy concept art'],
+['خيال','مدينة تحت الماء','Underwater city with glass domes and glowing coral gardens, shafts of sunlight from the surface, fish swimming between towers, sci-fi concept art'],
+['طبيعة','جبال وبحيرة','Alpine lake reflecting snow-capped mountains at sunrise, mist over the water, wildflowers in the foreground, landscape photography, wide angle'],
+['طبيعة','صحراء ونجوم','Sand dunes under a Milky Way sky, a lone camp with a warm glow, long exposure astrophotography, crisp stars'],
+['طبيعة','شاطئ استوائي','Tropical beach with turquoise water and palm trees, aerial view, soft morning light, vivid colors, travel photography'],
+['طبيعة','غابة مطيرة بعد المطر','Rainforest path after rain, sunbeams through the canopy, dripping leaves, rich greens, macro details, atmospheric depth']
+];
+var S={},F=[],cat='الكل';
+try{F=JSON.parse(localStorage.getItem('fav')||'[]')}catch(e){F=[]}
+var $=function(i){return document.getElementById(i)};
+function toast(m){var t=$('toast');t.textContent=m;t.classList.add('on');setTimeout(function(){t.classList.remove('on')},1600)}
+function copy(txt){
+ var ok=function(){toast('تم النسخ')};
+ if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).then(ok,fb)}else fb();
+ function fb(){try{var a=document.createElement('textarea');a.value=txt;document.body.appendChild(a);a.select();document.execCommand('copy');a.remove();ok()}catch(e){toast('تعذّر النسخ، انسخ يدويًا')}}
+}
+function build(){
+ var p=[],s=$('subj').value.trim();if(s)p.push(s);
+ G.forEach(function(g){if(S[g.k])p.push(S[g.k])});
+ var o=$('out');
+ if(!p.length){o.className='out empty';o.textContent='اكتب وصف الصورة واختر عناصر لتظهر الصيغة النهائية هنا.';return ''}
+ o.className='out';var r=p.join(', ');o.textContent=r;return r;
+}
+function groups(){
+ var h=$('groups');
+ G.forEach(function(g){
+  var d=document.createElement('div');d.className='grp';
+  d.innerHTML='<b>'+g.t+'</b>';
+  var c=document.createElement('div');c.className='chips';
+  g.o.forEach(function(o){
+   var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=o[0];b.setAttribute('aria-pressed','false');
+   b.onclick=function(){
+    var on=S[g.k]===o[1];S[g.k]=on?null:o[1];
+    c.querySelectorAll('.chip').forEach(function(x){x.setAttribute('aria-pressed','false')});
+    if(!on)b.setAttribute('aria-pressed','true');build();
+   };c.appendChild(b);
+  });d.appendChild(c);h.appendChild(d);
+ });
+}
+function cats(){
+ var names=['الكل','المفضلة'];T.forEach(function(t){if(names.indexOf(t[0])<0)names.push(t[0])});
+ var h=$('cats');h.innerHTML='';
+ names.forEach(function(n){
+  var b=document.createElement('button');b.className='chip';b.type='button';b.textContent=n;
+  b.setAttribute('aria-pressed',String(n===cat));
+  b.onclick=function(){cat=n;cats();lib()};h.appendChild(b);
+ });
+}
+function lib(){
+ var h=$('lib');h.innerHTML='';var n=0;
+ T.forEach(function(t,i){
+  if(cat==='المفضلة'?F.indexOf(i)<0:(cat!=='الكل'&&t[0]!==cat))return;n++;
+  var d=document.createElement('div');d.className='card';
+  d.innerHTML='<h3></h3><p></p><div class="row"><button class="btn p cp">نسخ</button><button class="btn fav" aria-pressed="'+(F.indexOf(i)>-1)+'">'+(F.indexOf(i)>-1?'في المفضلة':'إضافة للمفضلة')+'</button></div>';
+  d.querySelector('h3').textContent=t[1];d.querySelector('p').textContent=t[2];
+  d.querySelector('.cp').onclick=function(){copy(t[2])};
+  d.querySelector('.fav').onclick=function(){
+   var k=F.indexOf(i);if(k>-1)F.splice(k,1);else F.push(i);
+   try{localStorage.setItem('fav',JSON.stringify(F))}catch(e){}
+   lib();
+  };
+  h.appendChild(d);
+ });
+ if(!n){h.innerHTML='<p class="hint">لا توجد قوالب هنا بعد. اضغط «إضافة للمفضلة» على أي قالب ليظهر في هذا القسم.</p>'}
+}
+$('subj').oninput=build;
+$('copy').onclick=function(){var r=build();if(r)copy(r);else toast('اكتب وصفًا أولًا')};
+$('clear').onclick=function(){S={};$('subj').value='';document.querySelectorAll('#groups .chip').forEach(function(x){x.setAttribute('aria-pressed','false')});build()};
+document.querySelectorAll('.vl').forEach(function(a){a.addEventListener('click',function(){var r=build();if(r)copy(r)})});
+groups();cats();lib();
+</script>
+</body>
+</html>
