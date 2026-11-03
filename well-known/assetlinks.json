@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "com.adnan.promptstudio",
+        "sha256_cert_fingerprints": ["9B:28:3D:F5:46:3B:35:51:0E:20:9E:0D:32:00:52:81:A6:D9:98:8C:91:AD:03:90:0E:88:70:73:FB:69:E8:E7"]
+      }
+    }]
