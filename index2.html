@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>ستوديو البرومبت</title>
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0b1624">
 <style>
 :root{--bg:#f1f4f8;--sf:#fff;--tx:#10202f;--mu:#566678;--ac:#a86406;--acb:#f2b544;--acx:#2a1a00;--ln:#d5dde7;--tl:#0f7f78;
 box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -196,5 +198,6 @@ $('clear').onclick=function(){S={};$('subj').value='';document.querySelectorAll(
 document.querySelectorAll('.vl').forEach(function(a){a.addEventListener('click',function(){var r=build();if(r)copy(r)})});
 groups();cats();lib();
 </script>
+<script>if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(function(){})}</script>
 </body>
-</html>
+ </html>
