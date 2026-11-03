@@ -1,8 +1,10 @@
 {
   "name": "ستوديو البرومبت",
   "short_name": "البرومبت",
+  "description": "ابنِ برومبتات توليد الصور والفيديو بسهولة، مع قوالب جاهزة وأدوات مساعدة.",
   "lang": "ar",
   "dir": "rtl",
+  "id": "./index.html",
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
